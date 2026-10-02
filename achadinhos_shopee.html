@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Achadinhos da Shopee</title>
+<style>
+:root{
+  --bg:#f5f5f5;--card:#fff;--text:#171717;--muted:#6b6b6b;
+  --accent:#ee4d2d;--border:#e8e8e8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+main{max-width:620px;margin:auto;padding:28px 16px 42px}
+header{text-align:center;margin-bottom:24px}
+.avatar{width:76px;height:76px;border-radius:50%;margin:auto;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:34px;font-weight:800}
+h1{font-size:24px;margin:12px 0 6px}
+header p{margin:0;color:var(--muted)}
+.product{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #00000008}
+.product h2{font-size:17px;margin:0 0 6px}
+.price{font-weight:700;color:var(--accent);margin-bottom:14px}
+.actions{display:flex;gap:8px}
+button,a{border:0;border-radius:10px;padding:11px 12px;font-weight:700;text-decoration:none;text-align:center;font-size:14px;cursor:pointer}
+.buy{background:var(--accent);color:#fff;flex:1}
+.copy{background:#f1f1f1;color:#222;min-width:130px}
+.note{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="avatar">🛒</div>
+  <h1>Achadinhos da Shopee</h1>
+  <p>Produtos que valem a pena conferir 👀</p>
+</header>
+
+<section id="products"></section>
+<p class="note">Links de afiliado. Alguns produtos podem gerar comissão após a compra.</p>
+</main>
+
+<script>
+/*
+  EDITE APENAS A LISTA ABAIXO.
+  Para cada produto, coloque o SEU link de afiliado da Shopee em "link".
+*/
+const products = [
+  {
+    name: "SEU PRIMEIRO PRODUTO",
+    price: "R$ 00,00",
+    link: "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+  },
+  {
+    name: "SEU SEGUNDO PRODUTO",
+    price: "R$ 00,00",
+    link: "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+  }
+];
+
+const box = document.getElementById("products");
+
+products.forEach((p) => {
+  const article = document.createElement("article");
+  article.className = "product";
+  article.innerHTML = `
+    <h2>${escapeHtml(p.name)}</h2>
+    <div class="price">${escapeHtml(p.price)}</div>
+    <div class="actions">
+      <a class="buy" href="${safeUrl(p.link)}" target="_blank" rel="noopener">🛒 Ver produto</a>
+      <button class="copy" type="button">📋 Copiar link</button>
+    </div>
+  `;
+
+  article.querySelector(".copy").addEventListener("click", async (e) => {
+    try {
+      await navigator.clipboard.writeText(p.link);
+      e.currentTarget.textContent = "✓ Copiado!";
+      setTimeout(() => e.currentTarget.textContent = "📋 Copiar link", 1500);
+    } catch {
+      prompt("Copie seu link:", p.link);
+    }
+  });
+
+  box.appendChild(article);
+});
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+function safeUrl(url){
+  return /^https?:\/\//i.test(url) ? url : "#";
+}
+</script>
+</body>
+</html>
